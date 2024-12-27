@@ -21,8 +21,6 @@ module.exports = {
       "error",
       {
         semi: true,
-        singleQuote: true,
-        trailingComma: "none",
         bracketSpacing: true,
         arrowParens: "avoid",
       },
