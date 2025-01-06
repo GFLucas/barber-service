@@ -48,4 +48,19 @@ export class QueuesService {
       },
     });
   }
+
+  async queuesToday() {
+    const queueToday = await this.prisma.queue.findMany({
+      where: {
+        createdAt: {
+          equals: new Date(),
+        },
+      },
+      include: {
+        expert: true,
+        queuecustomers: true,
+      },
+    });
+    return queueToday;
+  }
 }
