@@ -20,7 +20,6 @@ module.exports = {
     "prettier/prettier": [
       "error",
       {
-        semi: true,
         bracketSpacing: true,
         arrowParens: "avoid",
       },
