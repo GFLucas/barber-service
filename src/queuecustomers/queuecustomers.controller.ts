@@ -5,6 +5,8 @@ import {
   Controller,
   HttpStatus,
   NotFoundException,
+  Param,
+  Patch,
   Post,
   Res,
 } from "@nestjs/common";
@@ -38,5 +40,18 @@ export class QueuecustomersController {
     });
 
     return res.status(HttpStatus.CREATED).json(customer);
+  }
+
+  @Patch(":id")
+  async attendCustomer(@Param("id") id: string, @Res() res: Response) {
+    const customer = await this.queuecustomersService.findCustomer(+id);
+
+    if (!customer) {
+      throw new NotFoundException({ message: "Cliente não encontrado." });
+    }
+
+    await this.queuecustomersService.attendCustomer(customer.id);
+
+    return res.status(HttpStatus.OK).send();
   }
 }

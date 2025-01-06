@@ -61,6 +61,13 @@ export class QueuesService {
         queuecustomers: true,
       },
     });
-    return queueToday;
+    return queueToday.map((queue) => {
+      return {
+        ...queue,
+        queuecustomers: queue.queuecustomers.filter(
+          (customer) => customer.isAwaiting
+        ),
+      };
+    });
   }
 }
