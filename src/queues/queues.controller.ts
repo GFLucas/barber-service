@@ -3,9 +3,11 @@ import {
   BadRequestException,
   Body,
   Controller,
+  Get,
   HttpStatus,
   NotFoundException,
   Post,
+  Query,
   Res,
 } from "@nestjs/common";
 import { QueuesService } from "./queues.service";
@@ -25,7 +27,7 @@ export class QueuesController {
     const expert = await this.expertsService.findExpert(data.expertId);
 
     if (!expert) {
-      throw new NotFoundException("Profissional não encontrado.");
+      throw new NotFoundException("Profissional não existe.");
     }
 
     const queueExists = await this.queuesService.queueExpertExist(
@@ -40,5 +42,23 @@ export class QueuesController {
 
     const queue = await this.queuesService.createQueue(data);
     return res.status(HttpStatus.CREATED).json(queue);
+  }
+
+  @Get()
+  async getExpertQueues(
+    @Query("expertId") expertId: string,
+    @Res() res: Response
+  ) {
+    if (expertId) {
+      const expert = await this.expertsService.findExpert(expertId);
+
+      if (!expert) {
+        throw new NotFoundException("Profissional não existe.");
+      }
+      const queues = await this.queuesService.getExpertQueues(expertId);
+      return res.json(queues);
+    }
+    const queues = await this.queuesService.getQueues();
+    return res.json(queues);
   }
 }

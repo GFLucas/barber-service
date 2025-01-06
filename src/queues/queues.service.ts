@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import { Injectable } from "@nestjs/common";
 import { PrismaService } from "src/database/prisma.service";
 import CreateQueueDto from "./dtos/create-queue";
@@ -17,6 +18,33 @@ export class QueuesService {
           equals: new Date(),
         },
         expertId: expertId,
+      },
+    });
+  }
+
+  async getQueues() {
+    return await this.prisma.queue.findMany({
+      include: {
+        expert: {
+          select: {
+            name: true,
+          },
+        },
+      },
+    });
+  }
+
+  async getExpertQueues(expertId: string) {
+    return await this.prisma.queue.findMany({
+      where: {
+        expertId: expertId,
+      },
+      include: {
+        expert: {
+          select: {
+            name: true,
+          },
+        },
       },
     });
   }
