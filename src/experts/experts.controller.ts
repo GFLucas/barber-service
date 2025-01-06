@@ -1,11 +1,15 @@
 /* eslint-disable prettier/prettier */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import {
-  BadRequestException,
-  Body,
   Controller,
-  HttpStatus,
+  Get,
   Post,
+  Body,
   Res,
+  BadRequestException,
+  HttpStatus,
+  Param,
+  NotFoundException,
 } from "@nestjs/common";
 import { ExpertsService } from "./experts.service";
 import CreateExpertsDto from "./dtos/create-experts";
@@ -29,5 +33,22 @@ export class ExpertsController {
 
     const expert = await this.expertsService.createExpert(data);
     return res.status(HttpStatus.CREATED).json(expert);
+  }
+
+  @Get()
+  async getExperts(@Res() res: Response) {
+    const experts = await this.expertsService.findAllExperts();
+    return res.json(experts);
+  }
+
+  @Get(":id")
+  async getExpert(@Param("id") id: string, @Res() res: Response) {
+    const expert = await this.expertsService.findExpert(id);
+
+    if (!expert) {
+      throw new NotFoundException("Profissional não encontrado.");
+    }
+
+    return res.json(expert);
   }
 }
